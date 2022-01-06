@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+// todo
+// listtile의 속성알기
+// listtile title 옆에 버튼 만들수 있는 속성찾아서 넣기
+// 버튼 onpressed에 삭제 함수 만들서 넣기
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +36,12 @@ class _MyAppState extends State<MyApp> {
     return a;
   }
 
+  delete(deleteName) {
+    setState(() {
+      name.removeAt(deleteName);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,7 +55,17 @@ class _MyAppState extends State<MyApp> {
         itemBuilder: (c, i) {
           return ListTile(
             leading: Text(count[i].toString()),
-            title: Text(name[i]),
+            title: Row(
+              children: [
+                Text(name[i]),
+                TextButton(
+                  onPressed: () {
+                    delete(i);
+                  },
+                  child: Text('삭제'),
+                )
+              ],
+            ),
             trailing: TextButton(
               child: Text('좋아요'),
               onPressed: () {
@@ -107,6 +127,10 @@ class DialogUI extends StatelessWidget {
                               fontSize: 20, fontWeight: FontWeight.w600),
                         ),
                         TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'EnterName',
+                          ),
                           onChanged: (text) {
                             inputData = text;
                           },
