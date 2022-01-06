@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-// todo
-// listtile의 속성알기
-// listtile title 옆에 버튼 만들수 있는 속성찾아서 넣기
-// 버튼 onpressed에 삭제 함수 만들서 넣기
 
 void main() {
   runApp(const MyApp());
@@ -18,8 +14,17 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var a = 1;
   var name = ['김영숙', '홍길동', '피자집', '박희문'];
-  var count = [0, 0, 0, 0];
   var inputData = '';
+  var count = [0, 0, 0, 0];
+
+  // var count = makeCount();
+
+  // makeCount() => setState(() {
+  //       for (var i = 0; i < name.length; i++) {
+  //         count.add('0');
+  //       }
+  //     });
+// 해야할것 !
   addData(enterName) {
     if (enterName.length > 0) {
       setState(() {
@@ -47,8 +52,21 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
-          title: Text(
-        a.toString(),
+          title: Row(
+        children: [
+          Text(
+            a.toString(),
+          ),
+          TextButton(
+            onPressed: () {},
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+            ),
+            child: Text(
+              '이름순 정렬',
+            ),
+          )
+        ],
       )),
       body: ListView.builder(
         itemCount: name.length,
