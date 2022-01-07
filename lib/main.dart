@@ -13,17 +13,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var a = 1;
-  var name = ['김영숙', '홍길동', '피자집', '박희문'];
+  var name = ['김영숙', '홍길동', '애쉬아일랜드', '피자집', '팔로알토', '창모'];
   var inputData = '';
-  var count = [0, 0, 0, 0];
-
-  // var count = makeCount();
-
-  // makeCount() => setState(() {
+  var count = [0, 0, 0, 0, 0, 0];
+  // makeCount()  {
+  //   setState(() {
   //       for (var i = 0; i < name.length; i++) {
-  //         count.add('0');
+  //         count.add(0);
   //       }
   //     });
+  // }
 // 해야할것 !
   addData(enterName) {
     if (enterName.length > 0) {
@@ -58,14 +57,31 @@ class _MyAppState extends State<MyApp> {
             a.toString(),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                name.sort((a, b) => a.compareTo(b));
+              });
+            },
             style: TextButton.styleFrom(
               primary: Colors.white,
             ),
             child: Text(
-              '이름순 정렬',
+              '이름순 오름차순',
             ),
-          )
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                name.sort((a, b) => b.compareTo(a));
+              });
+            },
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+            ),
+            child: Text(
+              '이름순 내림차순',
+            ),
+          ),
         ],
       )),
       body: ListView.builder(
