@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -23,7 +24,23 @@ class _MyAppState extends State<MyApp> {
       });
     }
 
+    phoneNumberLogic() {
+      phoneNumber.add('010-' +
+          (Random().nextInt(8999) + 1000).toString() +
+          '-' +
+          (Random().nextInt(8999) + 1000).toString());
+    }
+
+    makeNumber() {
+      setState(() {
+        for (var i = 0; i < name.length - 1; i++) {
+          phoneNumberLogic();
+        }
+      });
+    }
+
     makeCount();
+    makeNumber();
   }
 
   var a = 1;
@@ -33,10 +50,22 @@ class _MyAppState extends State<MyApp> {
     '차카타',
     '라마바',
   ];
+  // var phoneNumber = [
+  //   '0000',
+  //   '0000',
+  //   '0000',
+  //   '0000',
+  // ];
+  var phoneNumber = [
+    '010-' +
+        (Random().nextInt(8999) + 1000).toString() +
+        '-' +
+        (Random().nextInt(8999) + 1000).toString(),
+  ];
   var count = [0];
-  var inputData = '';
+  var inputName = '';
 
-  addData(enterName) {
+  addData(enterName, enter) {
     if (enterName.length > 0) {
       setState(() {
         name.add(enterName);
@@ -66,7 +95,18 @@ class _MyAppState extends State<MyApp> {
           title: Row(
         children: [
           Text(
-            '추가한 친구수 ' + a.toString(),
+            '추가한 친구수 : ' + a.toString(),
+          ),
+          TextButton(
+            onPressed: () {
+              // print(Random().nextInt(89999999) + 10000000);
+            },
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+            ),
+            child: Text(
+              'test',
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -102,8 +142,10 @@ class _MyAppState extends State<MyApp> {
           return ListTile(
             leading: Text(count[i].toString()),
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(name[i]),
+                Text('     ' + phoneNumber[i]),
                 TextButton(
                   onPressed: () {
                     delete(i);
@@ -130,7 +172,7 @@ class _MyAppState extends State<MyApp> {
             name: name,
             add: add,
             count: count,
-            inputData: inputData,
+            inputName: inputName,
             addData: addData);
       }),
     ));
@@ -144,10 +186,10 @@ class DialogUI extends StatelessWidget {
       this.name,
       this.add,
       this.count,
-      this.inputData,
+      this.inputName,
       this.addData})
       : super(key: key);
-  var a, name, add, count, inputData, addData;
+  var a, name, add, count, inputName, addData;
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +220,16 @@ class DialogUI extends StatelessWidget {
                             labelText: '이름을 입력하세요.',
                           ),
                           onChanged: (text) {
-                            inputData = text;
+                            inputName = text;
+                          },
+                        ),
+                        TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: '휴대폰 번호를 입력하세요.',
+                          ),
+                          onChanged: (text) {
+                            // inputName = text;
                           },
                         ),
                         Row(
@@ -192,7 +243,7 @@ class DialogUI extends StatelessWidget {
                             TextButton(
                                 onPressed: () {
                                   add();
-                                  addData(inputData);
+                                  addData(inputName);
                                   Navigator.pop(context);
                                 },
                                 child: Text('OK')),
