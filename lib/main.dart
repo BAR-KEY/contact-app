@@ -24,23 +24,7 @@ class _MyAppState extends State<MyApp> {
       });
     }
 
-    phoneNumberLogic() {
-      phoneNumber.add('010-' +
-          (Random().nextInt(8999) + 1000).toString() +
-          '-' +
-          (Random().nextInt(8999) + 1000).toString());
-    }
-
-    makeNumber() {
-      setState(() {
-        for (var i = 0; i < name.length - 1; i++) {
-          phoneNumberLogic();
-        }
-      });
-    }
-
     makeCount();
-    makeNumber();
   }
 
   var a = 1;
@@ -50,26 +34,27 @@ class _MyAppState extends State<MyApp> {
     '차카타',
     '라마바',
   ];
-  // var phoneNumber = [
-  //   '0000',
-  //   '0000',
-  //   '0000',
-  //   '0000',
-  // ];
   var phoneNumber = [
-    '010-' +
-        (Random().nextInt(8999) + 1000).toString() +
-        '-' +
-        (Random().nextInt(8999) + 1000).toString(),
+    '010' + (Random().nextInt(89999999) + 10000000).toString(),
+    '010' + (Random().nextInt(89999999) + 10000000).toString(),
+    '010' + (Random().nextInt(89999999) + 10000000).toString(),
+    '010' + (Random().nextInt(89999999) + 10000000).toString(),
   ];
   var count = [0];
   var inputName = '';
+  var inputPhoneNumber = '';
 
-  addData(enterName, enter) {
+  addData(enterName, enterPhoneNumber) {
     if (enterName.length > 0) {
       setState(() {
         name.add(enterName);
         count.add(0);
+        phoneNumber.add(enterPhoneNumber.toString());
+        // if (enterPhoneNumber is int) {
+        //   phoneNumber.add(enterPhoneNumber.toString());
+        // } else {
+        //   Navigator.pop(context);
+        // }
       });
     }
   }
@@ -95,18 +80,7 @@ class _MyAppState extends State<MyApp> {
           title: Row(
         children: [
           Text(
-            '추가한 친구수 : ' + a.toString(),
-          ),
-          TextButton(
-            onPressed: () {
-              // print(Random().nextInt(89999999) + 10000000);
-            },
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-            ),
-            child: Text(
-              'test',
-            ),
+            '추가한 친구수 ' + a.toString(),
           ),
           TextButton(
             onPressed: () {
@@ -142,10 +116,10 @@ class _MyAppState extends State<MyApp> {
           return ListTile(
             leading: Text(count[i].toString()),
             title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(name[i]),
-                Text('     ' + phoneNumber[i]),
+                Container(width: 100, height: 30, child: Text(name[i])),
+                Text(phoneNumber[i]),
                 TextButton(
                   onPressed: () {
                     delete(i);
@@ -173,6 +147,7 @@ class _MyAppState extends State<MyApp> {
             add: add,
             count: count,
             inputName: inputName,
+            inputPhoneNumber: inputPhoneNumber,
             addData: addData);
       }),
     ));
@@ -187,9 +162,10 @@ class DialogUI extends StatelessWidget {
       this.add,
       this.count,
       this.inputName,
+      this.inputPhoneNumber,
       this.addData})
       : super(key: key);
-  var a, name, add, count, inputName, addData;
+  var a, name, add, count, inputName, inputPhoneNumber, addData;
 
   @override
   Widget build(BuildContext context) {
@@ -226,10 +202,10 @@ class DialogUI extends StatelessWidget {
                         TextField(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: '휴대폰 번호를 입력하세요.',
+                            labelText: '전화번호를 입력하세요.',
                           ),
                           onChanged: (text) {
-                            // inputName = text;
+                            inputPhoneNumber = int.parse(text);
                           },
                         ),
                         Row(
@@ -243,7 +219,10 @@ class DialogUI extends StatelessWidget {
                             TextButton(
                                 onPressed: () {
                                   add();
-                                  addData(inputName);
+                                  if (inputPhoneNumber is int) {
+                                    addData(inputName, inputPhoneNumber);
+                                  }
+
                                   Navigator.pop(context);
                                 },
                                 child: Text('OK')),
