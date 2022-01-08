@@ -12,18 +12,30 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  @override
+  // ignore: must_call_super
+  void didChangeDependencies() {
+    makeCount() {
+      setState(() {
+        for (var i = 0; i < name.length - 1; i++) {
+          count.add(0);
+        }
+      });
+    }
+
+    makeCount();
+  }
+
   var a = 1;
-  var name = ['김영숙', '홍길동', '애쉬아일랜드', '피자집', '팔로알토', '창모'];
+  var name = [
+    '가나다',
+    '사아자',
+    '차카타',
+    '라마바',
+  ];
+  var count = [0];
   var inputData = '';
-  var count = [0, 0, 0, 0, 0, 0];
-  // makeCount()  {
-  //   setState(() {
-  //       for (var i = 0; i < name.length; i++) {
-  //         count.add(0);
-  //       }
-  //     });
-  // }
-// 해야할것 !
+
   addData(enterName) {
     if (enterName.length > 0) {
       setState(() {
@@ -54,7 +66,7 @@ class _MyAppState extends State<MyApp> {
           title: Row(
         children: [
           Text(
-            a.toString(),
+            '추가한 친구수 ' + a.toString(),
           ),
           TextButton(
             onPressed: () {
@@ -140,7 +152,7 @@ class DialogUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-        child: Text('hi'),
+        child: Text('추가'),
         onPressed: () {
           showDialog(
               context: context,
@@ -163,7 +175,7 @@ class DialogUI extends StatelessWidget {
                         TextField(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: 'EnterName',
+                            labelText: '이름을 입력하세요.',
                           ),
                           onChanged: (text) {
                             inputData = text;
