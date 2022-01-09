@@ -1,5 +1,7 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:contacts_service/contacts_service.dart';
+// import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -14,49 +16,30 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  // ignore: must_call_super
-  void didChangeDependencies() {
-    makeCount() {
-      setState(() {
-        for (var i = 0; i < name.length - 1; i++) {
-          count.add(0);
-        }
-      });
-    }
-
-    makeCount();
+  void initState() {
+    super.initState();
+    // makeCount();
   }
 
-  var a = 1;
-  var name = [
-    '가나다',
-    '사아자',
-    '차카타',
-    '라마바',
-  ];
-  var phoneNumber = [
-    '010' + (Random().nextInt(89999999) + 10000000).toString(),
-    '010' + (Random().nextInt(89999999) + 10000000).toString(),
-    '010' + (Random().nextInt(89999999) + 10000000).toString(),
-    '010' + (Random().nextInt(89999999) + 10000000).toString(),
-  ];
-  var count = [0];
-  var inputName = '';
-  var inputPhoneNumber = '';
+  int a = 1;
+  List<Contact> name = [];
+  List<int> count = [0, 0, 0, 0];
+  String inputName = '';
+  // List<String> phoneNumber = [
+  //   '010' + (Random().nextInt(89999999) + 10000000).toString(),
+  //   '010' + (Random().nextInt(89999999) + 10000000).toString(),
+  //   '010' + (Random().nextInt(89999999) + 10000000).toString(),
+  //   '010' + (Random().nextInt(89999999) + 10000000).toString(),
+  // ];
+  // String inputPhoneNumber = '';
 
-  addData(enterName, enterPhoneNumber) {
-    if (enterName.length > 0) {
-      setState(() {
-        name.add(enterName);
-        count.add(0);
-        phoneNumber.add(enterPhoneNumber.toString());
-        // if (enterPhoneNumber is int) {
-        //   phoneNumber.add(enterPhoneNumber.toString());
-        // } else {
-        //   Navigator.pop(context);
-        // }
-      });
-    }
+  // addData(enterName, enterPhoneNumber) {
+  addData(enterName) {
+    setState(() {
+      count.add(0);
+      name.add(enterName);
+      // phoneNumber.add(enterPhoneNumber.toString());
+    });
   }
 
   add() {
@@ -72,6 +55,34 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  // makeCount() {
+  //   setState(() {
+  //     for (int i = 0; i < name.length - 1; i++) {
+  //       count.add(0);
+  //     }
+  //   });
+  // }
+
+  getPermission() async {
+    var status = await Permission.contacts.status;
+    if (status.isGranted) {
+      print('허락됨');
+      var contacts = await ContactsService.getContacts();
+      print(contacts);
+      setState(() {
+        name = contacts;
+      });
+      // var nerPerson = Contact();
+      // nerPerson.givenName = 'test';
+      // await ContactsService.addContact(nerPerson);
+      // 연락처에 추가하는법.
+    } else if (status.isDenied) {
+      print('거절됨');
+      Permission.contacts.request();
+      openAppSettings();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -79,62 +90,87 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
           title: Row(
         children: [
-          Text(
-            '추가한 친구수 ' + a.toString(),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                name.sort((a, b) => a.compareTo(b));
-              });
-            },
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-            ),
+          Expanded(
+            flex: 2,
             child: Text(
-              '이름순 오름차순',
+              '추가한 친구수 ' + a.toString(),
+              style: TextStyle(fontSize: 14),
             ),
           ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                name.sort((a, b) => b.compareTo(a));
-              });
-            },
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-            ),
-            child: Text(
-              '이름순 내림차순',
+          Expanded(
+            flex: 2,
+            child: TextButton(
+              onPressed: () {
+                // setState(() {
+                // name.givenName.sort((a, b) => a.compareTo(b));
+                // });
+              },
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+              ),
+              child: Text(
+                '이름순 오름차순',
+              ),
             ),
           ),
+          Expanded(
+            flex: 2,
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  // name.givenName.sort((a, b) => b.compareTo(a));
+                });
+              },
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+              ),
+              child: Text(
+                '이름순 내림차순',
+              ),
+            ),
+          ),
+          Expanded(
+              flex: 1,
+              child: IconButton(
+                  onPressed: () {
+                    getPermission();
+                  },
+                  icon: Icon(Icons.contacts))),
         ],
       )),
       body: ListView.builder(
         itemCount: name.length,
         itemBuilder: (c, i) {
           return ListTile(
-            leading: Text(count[i].toString()),
             title: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(width: 100, height: 30, child: Text(name[i])),
-                Text(phoneNumber[i]),
-                TextButton(
-                  onPressed: () {
-                    delete(i);
-                  },
-                  child: Text('삭제'),
-                )
+                Expanded(
+                  flex: 1,
+                  child: Text(count[i].toString()),
+                ),
+                Expanded(flex: 2, child: Text(name[i].givenName ?? 'null')),
+                // Expanded(flex: 3, child: Text(phoneNumber[i])),
+                Expanded(
+                    flex: 2,
+                    child: TextButton(
+                      onPressed: () {
+                        delete(i);
+                      },
+                      child: Text('삭제'),
+                    )),
+                Expanded(
+                  flex: 2,
+                  child: TextButton(
+                    child: Text('좋아요'),
+                    onPressed: () {
+                      setState(() {
+                        count[i]++;
+                      });
+                    },
+                  ),
+                ),
               ],
-            ),
-            trailing: TextButton(
-              child: Text('좋아요'),
-              onPressed: () {
-                setState(() {
-                  count[i]++;
-                });
-              },
             ),
           );
         },
@@ -147,7 +183,7 @@ class _MyAppState extends State<MyApp> {
             add: add,
             count: count,
             inputName: inputName,
-            inputPhoneNumber: inputPhoneNumber,
+            // inputPhoneNumber: inputPhoneNumber,
             addData: addData);
       }),
     ));
@@ -165,7 +201,8 @@ class DialogUI extends StatelessWidget {
       this.inputPhoneNumber,
       this.addData})
       : super(key: key);
-  var a, name, add, count, inputName, inputPhoneNumber, addData;
+  final a, name, add, count, inputPhoneNumber, addData;
+  var inputName;
 
   @override
   Widget build(BuildContext context) {
@@ -199,15 +236,15 @@ class DialogUI extends StatelessWidget {
                             inputName = text;
                           },
                         ),
-                        TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: '전화번호를 입력하세요.',
-                          ),
-                          onChanged: (text) {
-                            inputPhoneNumber = int.parse(text);
-                          },
-                        ),
+                        // TextField(
+                        //   decoration: InputDecoration(
+                        //     border: OutlineInputBorder(),
+                        //     labelText: '전화번호를 입력하세요.',
+                        //   ),
+                        //   onChanged: (text) {
+                        //     inputPhoneNumber = int.parse(text);
+                        //   },
+                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -219,9 +256,14 @@ class DialogUI extends StatelessWidget {
                             TextButton(
                                 onPressed: () {
                                   add();
-                                  if (inputPhoneNumber is int) {
-                                    addData(inputName, inputPhoneNumber);
-                                  }
+                                  // addData(inputName);
+                                  var newContact = Contact();
+                                  newContact.givenName = inputName;
+                                  ContactsService.addContact(newContact);
+                                  addData(newContact);
+                                  // if (inputPhoneNumber is int) {
+                                  // addData(inputName, inputPhoneNumber);
+                                  // }
 
                                   Navigator.pop(context);
                                 },
