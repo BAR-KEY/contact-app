@@ -18,6 +18,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    getPermission();
     // makeCount();
   }
 
@@ -49,11 +50,11 @@ class _MyAppState extends State<MyApp> {
     return a;
   }
 
-  delete(deleteName) {
-    setState(() {
-      name.removeAt(deleteName);
-    });
-  }
+  // delete(a) {
+  //   setState(() {
+  //     name.removeAt(a);
+  //   });
+  // }
 
   // makeCount() {
   //   setState(() {
@@ -155,7 +156,9 @@ class _MyAppState extends State<MyApp> {
                     flex: 2,
                     child: TextButton(
                       onPressed: () {
-                        delete(i);
+                        // delete(i);
+                        ContactsService.deleteContact(name[i]);
+                        getPermission();
                       },
                       child: Text('삭제'),
                     )),
