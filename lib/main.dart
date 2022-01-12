@@ -50,6 +50,7 @@ class _MyAppState extends State<MyApp> {
       contacts = _contacts;
       setState(() {
         name = contacts;
+        // count = name.length.add(0);
       });
     } else if (status.isDenied) {
       print('거절됨');
@@ -66,26 +67,26 @@ class _MyAppState extends State<MyApp> {
           title: Row(
         children: [
           Expanded(
-            flex: 1,
+            flex: 6,
             child: Text(
               '추가한 친구수 ' + a.toString(),
               style: TextStyle(fontSize: 14),
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: TextButton(
-              onPressed: () {
-                print(name[0].phones);
-              },
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-              ),
-              child: Text(
-                'test',
-              ),
-            ),
-          ),
+          // Expanded(
+          //   flex: 2,
+          //   child: TextButton(
+          //     onPressed: () {
+          //       print(name[0].phones);
+          //     },
+          //     style: TextButton.styleFrom(
+          //       primary: Colors.white,
+          //     ),
+          //     child: Text(
+          //       'test',
+          //     ),
+          //   ),
+          // ),
           Expanded(
               flex: 1,
               child: IconButton(
@@ -107,7 +108,7 @@ class _MyAppState extends State<MyApp> {
                   child: Text(count[i].toString()),
                 ),
                 Expanded(flex: 2, child: Text(name[i].givenName ?? 'null')),
-                Expanded(flex: 3, child: Text(name[i].phones.toString())),
+                // Expanded(flex: 3, child: Text(name[i].phones.toString())),
                 Expanded(
                     flex: 2,
                     child: TextButton(
