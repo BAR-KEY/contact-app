@@ -24,16 +24,16 @@ class _MyAppState extends State<MyApp> {
 
   int a = 1;
   List<Contact> name = [];
-  List<int> count = [0, 0, 0, 0];
+  List<int> count = [];
   String inputName = '';
   String inputNumber = '';
 
-  addData(enterName, enterNumber) {
-    setState(() {
-      count.add(0);
-      name.add(enterName);
-    });
-  }
+  // addData(enterName, enterNumber) {
+  //   setState(() {
+  //     count.add(0);
+  //     name.add(enterName);
+  //   });
+  // }
 
   add() {
     setState(() {
@@ -50,8 +50,12 @@ class _MyAppState extends State<MyApp> {
       contacts = _contacts;
       setState(() {
         name = contacts;
-        // count = name.length.add(0);
       });
+      for (int i = 0; i < name.length; i++) {
+        if (i < name.length) {
+          count.add(0);
+        }
+      }
     } else if (status.isDenied) {
       print('거절됨');
       Permission.contacts.request();
@@ -73,20 +77,20 @@ class _MyAppState extends State<MyApp> {
               style: TextStyle(fontSize: 14),
             ),
           ),
-          // Expanded(
-          //   flex: 2,
-          //   child: TextButton(
-          //     onPressed: () {
-          //       print(name[0].phones);
-          //     },
-          //     style: TextButton.styleFrom(
-          //       primary: Colors.white,
-          //     ),
-          //     child: Text(
-          //       'test',
-          //     ),
-          //   ),
-          // ),
+          Expanded(
+            flex: 2,
+            child: TextButton(
+              onPressed: () {
+                print(count);
+              },
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+              ),
+              child: Text(
+                'test',
+              ),
+            ), //
+          ),
           Expanded(
               flex: 1,
               child: IconButton(
@@ -108,7 +112,9 @@ class _MyAppState extends State<MyApp> {
                   child: Text(count[i].toString()),
                 ),
                 Expanded(flex: 2, child: Text(name[i].givenName ?? 'null')),
-                // Expanded(flex: 3, child: Text(name[i].phones.toString())),
+                // Expanded(
+                //     flex: 3,
+                //     child: Text(name[i].phones?.elementAt(0).toString())),
                 Expanded(
                     flex: 2,
                     child: TextButton(
@@ -137,13 +143,15 @@ class _MyAppState extends State<MyApp> {
       bottomNavigationBar: BottomNavigator(),
       floatingActionButton: Builder(builder: (context) {
         return DialogUI(
-            a: a,
-            name: name,
-            add: add,
-            count: count,
-            inputName: inputName,
-            inputNumber: inputNumber,
-            addData: addData);
+          a: a,
+          name: name,
+          add: add,
+          count: count,
+          inputName: inputName,
+          inputNumber: inputNumber,
+          getPermission: getPermission,
+          // addData: addData
+        );
       }),
     ));
   }
@@ -158,10 +166,11 @@ class DialogUI extends StatelessWidget {
       this.count,
       this.inputName,
       this.inputNumber,
-      this.addData})
+      this.addData,
+      this.getPermission})
       : super(key: key);
   final a, name, add, count, addData;
-  var inputName, inputNumber;
+  var inputName, inputNumber, getPermission;
 
   @override
   Widget build(BuildContext context) {
@@ -217,11 +226,11 @@ class DialogUI extends StatelessWidget {
                                   add();
                                   var newContact = Contact();
                                   newContact.givenName = inputName;
-                                  // newContact.phones.ca = inputNumber;
                                   ContactsService.addContact(newContact);
-                                  addData(newContact);
-
+                                  count.add(0);
+                                  // addData(newContact);
                                   Navigator.pop(context);
+                                  getPermission();
                                 },
                                 child: Text('완료')),
                           ],
